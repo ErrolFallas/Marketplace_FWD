@@ -30,7 +30,11 @@ interface NavLink {
   isMock?: boolean
 }
 
-export function Navbar() {
+interface NavbarProps {
+  heroMode?: boolean
+}
+
+export function Navbar({ heroMode = false }: NavbarProps) {
   const t = useTranslations('Nav')
   const locale = useLocale()
   const pathname = usePathname()
@@ -39,6 +43,9 @@ export function Navbar() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+
+  // isHero = true solo en la landing page cuando está arriba
+  const isHero = heroMode && !scrolled
 
   useEffect(() => {
     const handleScroll = () => {
@@ -142,13 +149,14 @@ export function Navbar() {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        scrolled
-          ? 'border-b border-border/80 bg-background/80 backdrop-blur-xl shadow-md py-2'
-          : 'border-b border-border/20 bg-background/40 backdrop-blur-md py-3.5'
+      className={`sticky top-0 z-50 w-full transition-all duration-500 ${
+        isHero
+          ? 'bg-transparent border-b border-transparent'
+          : 'bg-background/95 backdrop-blur-xl border-b border-border/80 shadow-sm'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Main row: Logo + (inline links when scrolled) + Right actions */}
         <div className="flex justify-between h-16 items-center">
           {/* Logo */}
           <div className="flex items-center gap-6 xl:gap-8">
@@ -201,14 +209,22 @@ export function Navbar() {
                 />
                 <circle cx="50" cy="50" r="4.5" fill="#FFCB05" />
               </svg>
-              <span className="font-heading text-xl font-bold tracking-tight text-foreground block">
+              <span
+                className={`font-heading text-xl font-bold tracking-tight block transition-colors duration-500 ${isHero ? 'text-white drop-shadow-md' : 'text-foreground'}`}
+              >
                 Marketplace FWD<span className="text-primary">.</span>
               </span>
             </Link>
           </div>
 
-          {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
+          {/* Desktop Navigation Links — INLINE when scrolled */}
+          <div
+            className={`hidden md:flex items-center space-x-1 lg:space-x-2 transition-all duration-500 ${
+              isHero
+                ? 'opacity-0 invisible absolute pointer-events-none'
+                : 'opacity-100 visible'
+            }`}
+          >
             {navLinks.map((link) => {
               const isActive = pathname === link.href
               if (link.isMock) {
@@ -255,8 +271,12 @@ export function Navbar() {
 
           <div className="hidden md:flex items-center space-x-3">
             {/* Rol activo mostrado estáticamente sin opción a cambio */}
-            <div className="flex items-center gap-2 border-r border-border/80 pr-3 mr-1">
-              <div className="flex items-center gap-2 bg-muted/30 border border-border/50 rounded-full px-3 py-1.5 text-xs font-bold text-foreground select-none">
+            <div
+              className={`flex items-center gap-2 border-r pr-3 mr-1 transition-colors duration-500 ${isHero ? 'border-white/30' : 'border-border/80'}`}
+            >
+              <div
+                className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-bold select-none transition-all duration-500 ${isHero ? 'bg-white/15 border border-white/25 text-white drop-shadow-sm' : 'bg-muted/30 border border-border/50 text-foreground'}`}
+              >
                 <span
                   className={`w-2 h-2 rounded-full shrink-0 ${activeRole.dot}`}
                 />
@@ -269,7 +289,7 @@ export function Navbar() {
               variant="ghost"
               size="icon"
               aria-label={t('notifications')}
-              className="h-9 w-9 rounded-full text-muted-foreground hover:text-foreground relative shrink-0 transition-transform hover:scale-105 active:scale-95"
+              className={`h-9 w-9 rounded-full relative shrink-0 transition-all duration-500 hover:scale-105 active:scale-95 ${isHero ? 'text-white/90 hover:text-white hover:bg-white/10' : 'text-muted-foreground hover:text-foreground'}`}
             >
               <Bell className="w-5 h-5" />
               <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-magenta animate-pulse" />
@@ -277,7 +297,7 @@ export function Navbar() {
 
             {/* Language Selector */}
             <div
-              className="relative flex items-center border border-border/60 bg-muted/30 rounded-full p-0.5 shrink-0"
+              className={`relative flex items-center rounded-full p-0.5 shrink-0 transition-all duration-500 ${isHero ? 'border border-white/25 bg-white/15' : 'border border-border/60 bg-muted/30'}`}
               aria-label={t('language')}
             >
               <button
@@ -285,8 +305,12 @@ export function Navbar() {
                 onClick={() => handleLocaleChange('es')}
                 className={`relative z-10 px-3 py-1 text-xs rounded-full transition-colors font-bold ${
                   locale === 'es'
-                    ? 'text-primary'
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? isHero
+                      ? 'text-white'
+                      : 'text-primary'
+                    : isHero
+                      ? 'text-white/60 hover:text-white'
+                      : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {locale === 'es' && (
@@ -303,8 +327,12 @@ export function Navbar() {
                 onClick={() => handleLocaleChange('en')}
                 className={`relative z-10 px-3 py-1 text-xs rounded-full transition-colors font-bold ${
                   locale === 'en'
-                    ? 'text-primary'
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? isHero
+                      ? 'text-white'
+                      : 'text-primary'
+                    : isHero
+                      ? 'text-white/60 hover:text-white'
+                      : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {locale === 'en' && (
@@ -320,13 +348,13 @@ export function Navbar() {
 
             {/* User Profile Avatar / Logout Dropdown */}
             <div className="relative group shrink-0">
-              <button
-                type="button"
-                className="flex items-center justify-center w-9 h-9 rounded-full bg-muted hover:bg-muted-foreground/10 border border-border text-muted-foreground shadow-sm transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+              <Link
+                href="/empresa/perfil"
+                className={`flex items-center justify-center w-9 h-9 rounded-full shadow-sm transition-all duration-500 hover:scale-105 active:scale-95 cursor-pointer ${isHero ? 'bg-white/15 hover:bg-white/25 border border-white/25 text-white' : 'bg-muted hover:bg-muted-foreground/10 border border-border text-muted-foreground'}`}
                 aria-label={t('profile')}
               >
                 <User className="w-5 h-5" />
-              </button>
+              </Link>
               <div className="absolute right-0 top-full mt-2 w-36 bg-card border border-border rounded-xl shadow-xl py-1.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 <button
                   type="button"
@@ -351,7 +379,7 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="icon"
-              className="h-9 w-9 rounded-lg text-xs font-bold transition-transform hover:scale-105 active:scale-95"
+              className={`h-9 w-9 rounded-lg text-xs font-bold transition-all duration-500 hover:scale-105 active:scale-95 ${isHero ? 'text-white' : ''}`}
               onClick={() => handleLocaleChange(locale === 'es' ? 'en' : 'es')}
               aria-label={t('language')}
             >
@@ -361,7 +389,7 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="icon"
-              className="h-9 w-9 rounded-lg transition-transform hover:scale-105 active:scale-95"
+              className={`h-9 w-9 rounded-lg transition-all duration-500 hover:scale-105 active:scale-95 ${isHero ? 'text-white' : ''}`}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label={mobileMenuOpen ? t('closeMenu') : t('openMenu')}
             >
@@ -371,6 +399,60 @@ export function Navbar() {
                 <Menu className="w-5 h-5" />
               )}
             </Button>
+          </div>
+        </div>
+
+        {/* Desktop Navigation Links — FLOATING CAPSULE when NOT scrolled */}
+        <div
+          className={`hidden md:flex justify-center transition-all duration-500 ${
+            isHero
+              ? 'opacity-100 pb-3 -mt-1'
+              : 'h-0 opacity-0 overflow-hidden pointer-events-none -mt-2'
+          }`}
+        >
+          <div className="flex items-center space-x-1 lg:space-x-2 bg-background/80 backdrop-blur-md border border-border/60 rounded-full py-1.5 px-5 shadow-lg">
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href
+              if (link.isMock) {
+                return (
+                  <span
+                    key={`float-${link.href}`}
+                    aria-disabled="true"
+                    className="px-3.5 py-2 rounded-full text-sm font-semibold flex items-center gap-1.5 text-muted-foreground/40 cursor-not-allowed select-none"
+                  >
+                    {renderIcon(link.icon, 'w-4 h-4')}
+                    <span>{link.label}</span>
+                  </span>
+                )
+              }
+              return (
+                <Link
+                  key={`float-${link.href}`}
+                  href={link.href}
+                  className={`relative px-3.5 py-2 rounded-full text-sm font-semibold transition-colors duration-300 flex items-center gap-1.5 ${
+                    isActive
+                      ? 'text-primary'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="activePillFloat"
+                      className="absolute inset-0 bg-primary/10 rounded-full"
+                      transition={{
+                        type: 'spring',
+                        stiffness: 380,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                  <span className="relative z-10 flex items-center gap-1.5">
+                    {renderIcon(link.icon, 'w-4 h-4')}
+                    <span>{link.label}</span>
+                  </span>
+                </Link>
+              )
+            })}
           </div>
         </div>
       </div>

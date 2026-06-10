@@ -77,7 +77,10 @@ export function HeroBgCarousel({
               border: 'none',
               cursor: 'pointer',
               padding: 0,
-              background: i === current ? '#ffffff' : 'rgba(255,255,255,0.45)',
+              background:
+                i === current
+                  ? 'oklch(1 0 0 / 0.95)'
+                  : 'rgba(255,255,255,0.45)',
               transition: 'width 0.4s ease, background 0.4s ease',
             }}
           />

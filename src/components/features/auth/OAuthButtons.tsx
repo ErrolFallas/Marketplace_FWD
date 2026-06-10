@@ -23,8 +23,9 @@ export function OAuthButtons({
         variant="outline"
         onClick={onGoogleClick}
         disabled={disabled}
-        className="w-full h-12 rounded-full border border-gray-200 hover:bg-gray-50 bg-white font-semibold text-gray-700 text-sm flex items-center justify-center gap-3 transition-all duration-200 shadow-sm"
+        className="w-full h-12 rounded-full border border-border hover:bg-muted/50 bg-surface font-semibold text-foreground text-sm flex items-center justify-center gap-3 transition-all duration-200 shadow-sm"
       >
+        {/* Google brand SVG — brand colors must stay per Google guidelines */}
         <svg className="w-5 h-5" viewBox="0 0 24 24">
           <path
             fill="#EA4335"
@@ -50,7 +51,7 @@ export function OAuthButtons({
         type="button"
         onClick={onGitHubClick}
         disabled={disabled}
-        className="w-full h-12 rounded-full bg-black hover:bg-black/90 text-white font-semibold text-sm flex items-center justify-center gap-3 transition-all duration-200 shadow-sm"
+        className="w-full h-12 rounded-full bg-ink-strong hover:bg-ink text-primary-foreground font-semibold text-sm flex items-center justify-center gap-3 transition-all duration-200 shadow-sm"
       >
         <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
           <path

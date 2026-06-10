@@ -20,24 +20,11 @@ export default function LandingPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
-
-      <main className="flex-1">
-        {/* Hero — carrusel de fondo */}
-        <section
-          style={{
-            position: 'relative',
-            overflow: 'hidden',
-            minHeight: '620px',
-            display: 'flex',
-            alignItems: 'center',
-          }}
-          className="py-20 lg:py-32 px-4 sm:px-6 lg:px-8"
-        >
-          {/* ── Imágenes de fondo en carrusel ── */}
+      {/* Hero zone — background shared between navbar and hero content */}
+      <div className="relative">
+        {/* ── Fondo absoluto: carrusel + overlay (detrás de navbar y hero) ── */}
+        <div className="absolute inset-0 overflow-hidden">
           <HeroBgCarousel slides={CAROUSEL_SLIDES} interval={5000} />
-
-          {/* ── Overlay degradado para legibilidad ── */}
           <div
             style={{
               position: 'absolute',
@@ -47,72 +34,77 @@ export default function LandingPage() {
               zIndex: 1,
             }}
           />
+        </div>
 
-          {/* ── Contenido encima del fondo ── */}
-          <div style={{ position: 'relative', zIndex: 2, width: '100%' }}>
-            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-              <div className="lg:col-span-8 space-y-6 text-left">
-                <div
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border"
+        {/* ── Navbar: flujo normal + sticky ── */}
+        <Navbar heroMode />
+
+        {/* ── Contenido Hero ── */}
+        <div className="relative z-[2] py-20 lg:py-28 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div className="lg:col-span-8 space-y-6 text-left">
+              <div
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border"
+                style={{
+                  background: 'rgba(255,255,255,0.15)',
+                  borderColor: 'rgba(255,255,255,0.3)',
+                  color: 'oklch(1 0 0)',
+                  backdropFilter: 'blur(6px)',
+                }}
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                {tLanding('badgeVersion')}
+              </div>
+
+              <h1
+                className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] font-heading"
+                style={{
+                  color: 'oklch(1 0 0)',
+                  textShadow: '0 2px 16px rgba(0,0,0,0.4)',
+                }}
+              >
+                {tLanding('heroTitle')}
+                <span style={{ color: 'var(--accent)' }}>.</span>
+              </h1>
+
+              <p
+                className="text-lg leading-relaxed max-w-xl"
+                style={{ color: 'rgba(255,255,255,0.85)' }}
+              >
+                {tLanding('heroSubtitle')}
+              </p>
+
+              <div className="flex flex-wrap gap-4 pt-2">
+                <Link
+                  href="/login"
+                  className="shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all font-semibold px-6 py-3.5 rounded-lg text-sm inline-flex items-center justify-center gap-1.5 cursor-pointer"
                   style={{
-                    background: 'rgba(255,255,255,0.15)',
-                    borderColor: 'rgba(255,255,255,0.3)',
-                    color: '#ffffff',
+                    background: 'var(--primary)',
+                    color: 'oklch(1 0 0)',
+                  }}
+                >
+                  {tLanding('ctaFindProjects')}
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <Link
+                  href="/login"
+                  className="transition-all font-semibold px-6 py-3.5 rounded-lg text-sm inline-flex items-center justify-center gap-1.5 cursor-pointer"
+                  style={{
+                    border: '1.5px solid rgba(255,255,255,0.6)',
+                    color: 'oklch(1 0 0)',
+                    background: 'rgba(255,255,255,0.08)',
                     backdropFilter: 'blur(6px)',
                   }}
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  {tLanding('badgeVersion')}
-                </div>
-
-                <h1
-                  className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] font-heading"
-                  style={{
-                    color: '#ffffff',
-                    textShadow: '0 2px 16px rgba(0,0,0,0.4)',
-                  }}
-                >
-                  {tLanding('heroTitle')}
-                  <span style={{ color: '#20bec6' }}>.</span>
-                </h1>
-
-                <p
-                  className="text-lg leading-relaxed max-w-xl"
-                  style={{ color: 'rgba(255,255,255,0.85)' }}
-                >
-                  {tLanding('heroSubtitle')}
-                </p>
-
-                <div className="flex flex-wrap gap-4 pt-2">
-                  <Link
-                    href="/login"
-                    className="shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all font-semibold px-6 py-3.5 rounded-lg text-sm inline-flex items-center justify-center gap-1.5 cursor-pointer"
-                    style={{
-                      background: '#0a6cb9',
-                      color: '#ffffff',
-                    }}
-                  >
-                    {tLanding('ctaFindProjects')}
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                  <Link
-                    href="/login"
-                    className="transition-all font-semibold px-6 py-3.5 rounded-lg text-sm inline-flex items-center justify-center gap-1.5 cursor-pointer"
-                    style={{
-                      border: '1.5px solid rgba(255,255,255,0.6)',
-                      color: '#ffffff',
-                      background: 'rgba(255,255,255,0.08)',
-                      backdropFilter: 'blur(6px)',
-                    }}
-                  >
-                    {tLanding('ctaPublishProject')}
-                  </Link>
-                </div>
+                  {tLanding('ctaPublishProject')}
+                </Link>
               </div>
             </div>
           </div>
-        </section>
+        </div>
+      </div>
 
+      <main className="flex-1">
         {/* Stats */}
         <section className="bg-secondary text-secondary-foreground py-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">

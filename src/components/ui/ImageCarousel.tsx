@@ -52,7 +52,7 @@ export function ImageCarousel({
         borderRadius: '20px',
         overflow: 'hidden',
         boxShadow: '0 12px 48px rgba(0,0,0,0.15)',
-        backgroundColor: '#f0f0f0',
+        backgroundColor: 'var(--canvas)',
       }}
     >
       {/* Slides */}
@@ -113,7 +113,7 @@ export function ImageCarousel({
           alignItems: 'center',
           justifyContent: 'center',
           boxShadow: '0 2px 12px rgba(0,0,0,0.18)',
-          color: '#0a6cb9',
+          color: 'var(--primary)',
           transition: 'background 0.2s, transform 0.2s',
         }}
         onMouseEnter={(e) => {
@@ -149,7 +149,7 @@ export function ImageCarousel({
           alignItems: 'center',
           justifyContent: 'center',
           boxShadow: '0 2px 12px rgba(0,0,0,0.18)',
-          color: '#0a6cb9',
+          color: 'var(--primary)',
           transition: 'background 0.2s, transform 0.2s',
         }}
         onMouseEnter={(e) => {
@@ -189,7 +189,8 @@ export function ImageCarousel({
               border: 'none',
               cursor: 'pointer',
               padding: 0,
-              background: i === current ? '#ffffff' : 'rgba(255,255,255,0.5)',
+              background:
+                i === current ? 'oklch(1 0 0 / 0.95)' : 'rgba(255,255,255,0.5)',
               transition: 'width 0.3s ease, background 0.3s ease',
             }}
           />
